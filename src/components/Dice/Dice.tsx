@@ -43,6 +43,7 @@ export default function Dice() {
   const [gameHistory, setGameHistory] = useState<GameResult[]>([]);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
   const [alertType, setAlertType] = useState<alertTypeValue.success | alertTypeValue.error | alertTypeValue.info>(alertTypeValue.info);
+  const [randomNumber, setRandomNumber] = useState<number | null>(null)
 
   const playGame = () => {
     const randomResult = Math.floor(Math.random() * 100) + 1;
@@ -55,6 +56,7 @@ export default function Dice() {
       isWin ? "You won!" : `Number was ${randomResult > threshold ? "higher" : "lower"}`
     );
     setAlertType(isWin ? alertTypeValue.success : alertTypeValue.error);
+    setRandomNumber(randomResult)
 
     const newGamer: GameResult = {
       time: new Date().toLocaleTimeString(),
@@ -63,7 +65,10 @@ export default function Dice() {
       isWin: isWin ? true : false,
     };
 
-    setGameHistory((prev) => [newGamer, ...prev]);
+    setGameHistory((prev) => {
+      const updatedHistory = [newGamer, ...prev];
+      return updatedHistory.slice(0, 10);
+    });
   };
 
   const handleChangeValue = (event: Event) => {
@@ -84,7 +89,7 @@ export default function Dice() {
         background: "rgba(0, 0, 0, 0.04)"
       }}>
         <Typography variant="h1" gutterBottom  sx={{margin: 0}}>
-          {threshold}
+          {randomNumber && randomNumber}
         </Typography>
       </Box>
       <Box sx={{ mb: 2 }}>
